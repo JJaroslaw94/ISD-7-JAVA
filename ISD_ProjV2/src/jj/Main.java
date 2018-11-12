@@ -81,7 +81,8 @@ public class Main {
 		PanelLVL3L.add(WPspec);
 		WPspec.add(wskazywaniePliku);
 
-		wskazywaniePliku.addActionListener(new ActionListener() {			
+		wskazywaniePliku.addActionListener(new ActionListener() {
+			//TEST
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser= new JFileChooser();
