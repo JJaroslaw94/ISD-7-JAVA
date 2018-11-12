@@ -82,7 +82,7 @@ public class Main {
 		WPspec.add(wskazywaniePliku);
 
 		wskazywaniePliku.addActionListener(new ActionListener() {
-			//TEST
+			//TEST2
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser= new JFileChooser();
