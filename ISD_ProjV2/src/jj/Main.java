@@ -3,7 +3,6 @@ package jj;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Component;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
@@ -20,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -47,13 +47,11 @@ public class Main {
 	{
 		JFrame Program = new JFrame("ISD Projekt");
 		
-		Program.setSize(new Dimension(1170, 500));
+		Program.setSize(new Dimension(1200, 500));
 		//Program.setResizable(false);
 		Program.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Program.add(PanelLVL1);
-		
-		
 		
 		Content();
 		
@@ -72,7 +70,9 @@ public class Main {
 		PanelLVL3L.setSize(new Dimension(500, 1000));
 		PanelLVL3L.setMaximumSize(new Dimension(500, 1000));
 		
-		//TODO Lewa czesc zawierajaca 1 cz programu (wczytywanie plikow i slow)
+		//Lewa czesc zawierajaca 1 cz programu (wczytywanie plikow i slow)
+		//TODO zabespieczenie przed nie wczytaniem pliku & podaniem termow
+		
 		PanelLVL3L.setLayout(new BoxLayout(PanelLVL3L, BoxLayout.PAGE_AXIS));
 		
 		JPanel WPspec = new JPanel();
@@ -162,14 +162,7 @@ public class Main {
 		
 		JButton ResetowanieTSM = new JButton("Resetuj TSM");
 		P2PMenu.add(ResetowanieTSM);
-		ResetowanieTSM.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
+		
 		
 		String[][] dane = 
 				{	{"","","","","","","","",""},
@@ -185,7 +178,26 @@ public class Main {
 					{"","","","","","","","",""}	};
 		String[] naglowki = {"","","","","","","","",""};
 		JTable TTSM = new JTable(dane, naglowki);
-		PanelLVL2P.add(TTSM, BorderLayout.CENTER);
+		JPanel PL2Ptsm = new JPanel();
+		PanelLVL2P.add(PL2Ptsm, BorderLayout.CENTER);
+		PL2Ptsm.setLayout(new BoxLayout(PL2Ptsm, BoxLayout.PAGE_AXIS));
+		
+		JLabel P2PtsmLabel = new JLabel("TSM");
+		PL2Ptsm.add(P2PtsmLabel);
+		
+		PL2Ptsm.add(TTSM);
+		
+		//TODO scrolowalny panel z odpowiedziami
+		
+		JPanel PL2Pscrol = new JPanel();		
+		
+		PL2Pscrol.setPreferredSize(new Dimension( 700,1300)); //TODO 
+		
+		JScrollPane ScrollowanyPanelnaTablice = new JScrollPane(PL2Pscrol);
+		
+		ScrollowanyPanelnaTablice.setPreferredSize(new Dimension( 720,300));
+		
+		PanelLVL2P.add(ScrollowanyPanelnaTablice, BorderLayout.SOUTH);
 		
 		
 		
@@ -202,6 +214,7 @@ public class Main {
 					for (int Licznik = 1; Licznik <= ileterm; Licznik++ ) 
 						TTSM.setValueAt(Termy[Licznik-1], LdwTSM, Licznik);	
 					LdwTSM = 1;
+					PoleNaTermy.setEditable(false);
 				}
 					String[] Ilewyst = IlewystN.split(Pattern.quote(","));
 					int ilewyst = Ilewyst.length;
@@ -211,6 +224,21 @@ public class Main {
 					}
 					LdwTSM++;
 				}});
+		
+		ResetowanieTSM.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				LdwTSM = 0;
+				
+				for (int i = 0 ; i<7 ; i++) 
+					for(int ii = 0 ; ii<9 ; ii++ ) 
+						TTSM.setValueAt("",i,ii);
+								
+				PoleNaTermy.setEditable(true);				
+			}
+		});
 		
 		
 	}
@@ -224,10 +252,10 @@ public class Main {
 		int i = 0;
 		IlewystN = "";
 		
-		for (int term : IleTermow)
-		{
-			term = 0;
-		}
+//		for (int term : IleTermow)
+//		{
+//			term = 0;
+//		}
 		
 		StringBuilder contentBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(chosenFile)))
