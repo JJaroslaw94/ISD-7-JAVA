@@ -37,6 +37,10 @@ public class Main {
 		   static JTextField PoleNaTermy;
 		   static Checkbox precyzja;
 		   static JTextField EuqTargetTextF;
+		   static JTextField ManhatanTargetTextF;
+		   static JTextField MaxTargetTextF;
+		   static JTextField MinkTargetTextF;
+		   static JTextField MinkTargetMTextF;
 		   
 		   boolean PRE;
 		   
@@ -51,8 +55,10 @@ public class Main {
 		   static JTable TTSM;
 		   static JTable TIFIDF;
 		   static JTable TEuq;
-		   
-	
+		   static JTable TManhatan;
+		   static JTable TMax;
+		   static JTable TMink;
+		   static JTable TZestawienie;
 	
 	public static void RamaiUstawienia()
 	{
@@ -284,6 +290,8 @@ public class Main {
 		TIFIDF = new JTable(DTab.daneTFIFD, DTab.naglowki);	
 		PL2Pscrol.add(TIFIDF);
 		
+		//Euqlides
+		
 		JPanel EuqlidesButtonPanel = new JPanel();
 		PL2Pscrol.add(EuqlidesButtonPanel);
 		EuqlidesButtonPanel.setLayout(new BoxLayout(EuqlidesButtonPanel, BoxLayout.LINE_AXIS));
@@ -303,28 +311,219 @@ public class Main {
 		
 		EuqStartButton.addActionListener(new ActionListener() {	
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
+				//TODO blokada textfieldow
+				EuqTargetTextF.setEnabled(false);
+				ManhatanTargetTextF.setEnabled(false);
+				ManhatanTargetTextF.setText(EuqTargetTextF.getText());
+				MaxTargetTextF.setEnabled(false);
+				MaxTargetTextF.setText(EuqTargetTextF.getText());
+				MinkTargetTextF.setEnabled(false);
+				MinkTargetTextF.setText(EuqTargetTextF.getText());
 				obliczanieEuq();
 			}
 		});
 		
-		JButton EuqResetButton = new JButton("Reset Euq");
+		JButton EuqResetButton = new JButton("Reset");
 		EuqlidesButtonPanel.add(EuqResetButton);
 		
 		EuqResetButton.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {				
-				for (int i = 0; i < LdwTSM; i++)
-					for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)
-						TEuq.setValueAt("", i, ii);				
-			}
-		});
+			public void actionPerformed(ActionEvent e) {	
+				resetObliczanychTabel();
+		}});
 		
 		TEuq = new JTable(DTab.daneEuq,DTab.Euqnaglowki);
 		PL2Pscrol.add(TEuq);
 		
-		//TODO reszta odpowiedzi programu
+		// Manhatan
+		
+		JPanel ManhatanButtonPanel = new JPanel();
+		PL2Pscrol.add(ManhatanButtonPanel);
+		ManhatanButtonPanel.setLayout(new BoxLayout(ManhatanButtonPanel, BoxLayout.LINE_AXIS));
+		
+	
+		JLabel ManhatanTarget = new JLabel("Ktory dokument chcesz porownac");
+		ManhatanButtonPanel.add(ManhatanTarget);
+		
+		JPanel ManhatanTFfix = new JPanel();
+		ManhatanButtonPanel.add(ManhatanTFfix);
+		ManhatanTargetTextF = new JTextField(2);
+		ManhatanTFfix.setMaximumSize(new Dimension(75, 25));
+		ManhatanTFfix.add(ManhatanTargetTextF);
+		
+		JButton ManhatanStartButton = new JButton("TFM > Manhatan");
+		ManhatanButtonPanel.add(ManhatanStartButton);
+		
+		ManhatanStartButton.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				//TODO blokada textfieldow
+				EuqTargetTextF.setEnabled(false);
+				EuqTargetTextF.setText(ManhatanTargetTextF.getText());
+				ManhatanTargetTextF.setEnabled(false);
+				MaxTargetTextF.setEnabled(false);
+				MaxTargetTextF.setText(ManhatanTargetTextF.getText());
+				MinkTargetTextF.setEnabled(false);
+				MinkTargetTextF.setText(ManhatanTargetTextF.getText());
+				obliczanieManhatan();
+			}
+		});
+		
+		JButton ManhatanResetButton = new JButton("Reset");
+		ManhatanButtonPanel.add(ManhatanResetButton);
+		
+		ManhatanResetButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {	
+				resetObliczanychTabel();
+		}});
+		
+		TManhatan = new JTable(DTab.daneManhatan,DTab.Manhatannaglowki);
+		PL2Pscrol.add(TManhatan);
+		
+		// Max
+		
+		JPanel MaxButtonPanel = new JPanel();
+		PL2Pscrol.add(MaxButtonPanel);
+		MaxButtonPanel.setLayout(new BoxLayout(MaxButtonPanel, BoxLayout.LINE_AXIS));
+		
+	
+		JLabel MaxTarget = new JLabel("Ktory dokument chcesz porownac");
+		MaxButtonPanel.add(MaxTarget);
+		
+		JPanel MaxTFfix = new JPanel();
+		MaxButtonPanel.add(MaxTFfix);
+		MaxTargetTextF = new JTextField(2);
+		MaxTFfix.setMaximumSize(new Dimension(75, 25));
+		MaxTFfix.add(MaxTargetTextF);
+		
+		JButton MaxStartButton = new JButton("TFM > Max");
+		MaxButtonPanel.add(MaxStartButton);
+		
+		MaxStartButton.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				//TODO blokada textfieldow
+				EuqTargetTextF.setEnabled(false);
+				EuqTargetTextF.setText(MaxTargetTextF.getText());
+				ManhatanTargetTextF.setEnabled(false);
+				ManhatanTargetTextF.setText(MaxTargetTextF.getText());
+				MaxTargetTextF.setEnabled(false);
+				MinkTargetTextF.setEnabled(false);
+				MinkTargetTextF.setText(MaxTargetTextF.getText());
+				obliczanieMax();
+			}
+		});
+		
+		JButton MaxResetButton = new JButton("Reset");
+		MaxButtonPanel.add(MaxResetButton);
+		
+		MaxResetButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {	
+				resetObliczanychTabel();
+		}});
+		
+		TMax = new JTable(DTab.daneMax,DTab.Manhatannaglowki);
+		PL2Pscrol.add(TMax);
+		
+		//TODO Minkoiwski		
+		
+		JPanel MinkButtonPanel = new JPanel();
+		PL2Pscrol.add(MinkButtonPanel);
+		MinkButtonPanel.setLayout(new BoxLayout(MinkButtonPanel, BoxLayout.LINE_AXIS));
+		
+	
+		JLabel MinkTarget = new JLabel("Ktory dokument chcesz porownac");
+		MinkButtonPanel.add(MinkTarget);
+		
+		JPanel MinkTFfix = new JPanel();
+		MinkButtonPanel.add(MinkTFfix);
+		MinkTargetTextF = new JTextField(2);
+		MinkTFfix.setMaximumSize(new Dimension(75, 25));
+		MinkTFfix.add(MinkTargetTextF);
+		
+		JLabel MinkTargetM = new JLabel("Mnoznik");
+		MinkButtonPanel.add(MinkTargetM);
+		
+		JPanel MinkTFMfix = new JPanel();
+		MinkButtonPanel.add(MinkTFMfix);
+		MinkTargetMTextF = new JTextField(2);
+		MinkTFMfix.setMaximumSize(new Dimension(75, 25));
+		MinkTFMfix.add(MinkTargetMTextF);
+		
+		JButton MinkStartButton = new JButton("TFM > Minkowski");
+		MinkButtonPanel.add(MinkStartButton);
+		
+		MinkStartButton.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				//TODO blokada textfieldow
+				EuqTargetTextF.setEnabled(false);
+				EuqTargetTextF.setText(MinkTargetTextF.getText());
+				ManhatanTargetTextF.setEnabled(false);
+				ManhatanTargetTextF.setText(MinkTargetTextF.getText());
+				MaxTargetTextF.setEnabled(false);
+				MaxTargetTextF.setText(MinkTargetTextF.getText());
+				MinkTargetTextF.setEnabled(false);
+				obliczanieMini();
+			}
+		});
+		
+		JButton MinkResetButton = new JButton("Reset");
+		MinkButtonPanel.add(MinkResetButton);
+		
+		MinkResetButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {	
+				resetObliczanychTabel();
+		}});
+		
+		TMink = new JTable(DTab.daneMini,DTab.Euqnaglowki);
+		PL2Pscrol.add(TMink);
+		
+		//Zestawienie
+		
+		JPanel ZestawienieButtonPanel = new JPanel();
+		PL2Pscrol.add(ZestawienieButtonPanel);
+		ZestawienieButtonPanel.setLayout(new BoxLayout(ZestawienieButtonPanel, BoxLayout.LINE_AXIS));
+		
+		
+		JButton ZestawienieStartButton = new JButton("Zestawienie wyników tabel");
+		ZestawienieButtonPanel.add(ZestawienieStartButton);
+		
+		ZestawienieStartButton.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				//TODO blokada textfieldow
+				EuqTargetTextF.setEnabled(false);
+				EuqTargetTextF.setText(MinkTargetTextF.getText());
+				ManhatanTargetTextF.setEnabled(false);
+				ManhatanTargetTextF.setText(MinkTargetTextF.getText());
+				MaxTargetTextF.setEnabled(false);
+				MaxTargetTextF.setText(MinkTargetTextF.getText());
+				MinkTargetTextF.setEnabled(false);
+				obliczanieZestawieniei();
+			}
+		});
+		
+		JButton ZestawienieResetButton = new JButton("Reset");
+		ZestawienieButtonPanel.add(ZestawienieResetButton);
+		
+		ZestawienieResetButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {	
+				resetObliczanychTabel();
+		}});
+		
+		TZestawienie = new JTable(DTab.daneZestaweine,DTab.Zestawienienaglowki);
+		PL2Pscrol.add(TZestawienie);
 		
 	}
 
@@ -416,6 +615,35 @@ public class Main {
 		
 	}
 	
+	public static void resetObliczanychTabel()
+	{
+		
+		EuqTargetTextF.setEnabled(true);		
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)
+				TEuq.setValueAt("", i, ii);		
+		
+		ManhatanTargetTextF.setEnabled(true);
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)
+				TManhatan.setValueAt("", i, ii);
+		
+		MaxTargetTextF.setEnabled(true);
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)
+				TMax.setValueAt("", i, ii);
+	
+		MinkTargetTextF.setEnabled(true);		
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)
+				TMink.setValueAt("", i, ii);
+		
+				
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+5 ; ii++)
+				TZestawienie.setValueAt("", i, ii);
+	}
+	
 	public static void obliczanieEuq() {
 		
 		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
@@ -437,7 +665,7 @@ public class Main {
 					TEuq.setValueAt("Suma", i, ii);
 					else
 					if (ii == (int)IleRoznychTermow+2)
-					TEuq.setValueAt("Sqrt(Suma)", i, ii);
+					TEuq.setValueAt("Euqlides", i, ii);
 				}
 				}else 
 				{
@@ -461,6 +689,198 @@ public class Main {
 			}
 		
 		
+	}
+	
+	public static void obliczanieManhatan()
+	{
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int sumaTermow = 0;
+		
+		
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)
+			{
+				if (ii == 0 || i == 0) {
+				if (ii == 0) {
+				TManhatan.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+				}
+				if (i == 0) {
+					if ( ii < (int)IleRoznychTermow+1)
+					TManhatan.setValueAt(TTSM.getValueAt(i, ii), i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+1)
+					TManhatan.setValueAt("Manhatan", i, ii);
+				}
+				}else 
+				{
+					if ( ii < (int)IleRoznychTermow+1)
+						{
+						Double wynik = Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), 2);
+						TManhatan.setValueAt(Double.toString(wynik),i,ii);
+						sumaTermow += wynik;
+						}
+						else
+						if (ii == (int)IleRoznychTermow+1)
+						{
+						TManhatan.setValueAt(Integer.toString(sumaTermow), i, ii);
+						sumaTermow = 0;
+						}												
+				}
+			}
+	}
+	
+	public static void obliczanieMax()
+	{
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int sumaTermow = 0;
+		
+		
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)
+			{
+				if (ii == 0 || i == 0) {
+				if (ii == 0) {
+				TMax.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+				}
+				if (i == 0) {
+					if ( ii < (int)IleRoznychTermow+1)
+					TMax.setValueAt(TTSM.getValueAt(i, ii), i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+1)
+					TMax.setValueAt("Max", i, ii);
+				}
+				}else 
+				{
+					if ( ii < (int)IleRoznychTermow+1)
+						{
+						Double wynik = Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), 2);
+						TMax.setValueAt(Double.toString(wynik),i,ii);
+						if (sumaTermow<wynik) sumaTermow = (int) Math.round(wynik);
+						
+						
+						}
+						else
+						if (ii == (int)IleRoznychTermow+1)
+						{
+						TMax.setValueAt(Integer.toString(sumaTermow), i, ii);
+						sumaTermow = 0;
+						}												
+				}
+			}
+	}
+	
+	
+public static void obliczanieMini() {
+		
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int sumaTermow = 0;
+		
+		int mod = Integer.parseInt(MinkTargetMTextF.getText());
+		
+		
+		
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)
+			{
+				if (ii == 0 || i == 0) {
+				if (ii == 0) {
+					TMink.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+				}
+				if (i == 0) {
+					if ( ii < (int)IleRoznychTermow+1)
+						TMink.setValueAt(TTSM.getValueAt(i, ii), i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+1)
+						TMink.setValueAt("Suma", i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+2)
+						TMink.setValueAt("Minikowski", i, ii);
+				}
+				}else 
+				{
+					if ( ii < (int)IleRoznychTermow+1)
+						{
+						Double wynik = Math.abs(Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), mod));
+						TMink.setValueAt(Double.toString(wynik),i,ii);
+						sumaTermow += wynik;
+						}
+						else
+						if (ii == (int)IleRoznychTermow+1)
+							TMink.setValueAt(Integer.toString(sumaTermow), i, ii);
+						else
+						if (ii == (int)IleRoznychTermow+2)
+						{
+							TMink.setValueAt(Double.toString(Math.sqrt(sumaTermow)), i, ii);
+						sumaTermow = 0;
+						}
+						
+				}
+			}
+		
+		
+	}
+
+	public static void obliczanieZestawieniei()
+	{
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int sumaTermow = 0;
+		
+		int mod = Integer.parseInt(MinkTargetMTextF.getText());
+		
+		
+		
+		for (int i = 0; i < LdwTSM; i++)
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+5 ; ii++)
+			{
+				if (ii == 0 || i == 0) {
+				if (ii == 0) {
+					TZestawienie.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+				}
+				if (i == 0) {
+					if ( ii < (int)IleRoznychTermow+1)
+						TZestawienie.setValueAt(TTSM.getValueAt(i, ii), i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+1)
+						TZestawienie.setValueAt("Euqlides", i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+2)
+						TZestawienie.setValueAt("Manhatan", i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+3)
+						TZestawienie.setValueAt("Maximum", i, ii);
+					else
+					if (ii == (int)IleRoznychTermow+4)
+						TZestawienie.setValueAt("Minkowski", i, ii);
+				}
+				}else 
+				{
+					if ( ii < (int)IleRoznychTermow+1)
+						{
+						Double wynik = Math.abs(Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii)));
+						TZestawienie.setValueAt(Double.toString(wynik),i,ii);						
+						}
+						else
+						if (ii == (int)IleRoznychTermow+1)
+							TZestawienie.setValueAt(TEuq.getValueAt(i, ii+1), i, ii);
+						else
+						if (ii == (int)IleRoznychTermow+2)
+						{
+							TZestawienie.setValueAt(TManhatan.getValueAt(i, ii-1), i, ii);				
+						}
+						else
+						if (ii == (int)IleRoznychTermow+3)
+						{
+							TZestawienie.setValueAt(TMax.getValueAt(i, ii-2), i, ii);
+						}
+						else
+						if (ii == (int)IleRoznychTermow+4)
+						{
+							TZestawienie.setValueAt(TMink.getValueAt(i, ii-2), i, ii);
+							sumaTermow = 0;
+						}
+						
+				}
+			}
 	}
 	
 	public static void main(String[] args) 
