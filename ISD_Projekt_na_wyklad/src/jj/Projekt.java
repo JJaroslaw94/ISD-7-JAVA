@@ -1,8 +1,6 @@
 package jj;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -15,18 +13,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import javax.sound.sampled.Line;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -192,7 +184,7 @@ public class Projekt {
 		});
 		
 		PanelGridow = new JPanel();
-		PanelGridow.setLayout(new GridLayout(2, 4));
+		PanelGridow.setLayout(new GridLayout(10, 4));
 		WyszukiwarkaZWynikiem.add(PanelGridow);
 		
 		JPanel _3rdLayer1stPanel = new JPanel();
@@ -205,7 +197,7 @@ public class Projekt {
 		
 		PolecaneLabel = new JLabel("Polecamy również: ");
 		_3rdLayer1stPanel.add(PolecaneLabel);
-		PolecaneLabel.setVisible(false);;
+		PolecaneLabel.setVisible(false);
 		
 		GridPanel2 = new JPanel();
 		GridPanel2.setLayout(new GridLayout(4, 2));
@@ -236,21 +228,19 @@ public class Projekt {
 		wyszukiwanaFraza = wyszukiwanaFraza.toUpperCase().replace('Ó','O');
 		wyszukiwanaFraza = wyszukiwanaFraza.toUpperCase().replace('Ę','E');		
 		wyszukiwanaFraza = wyszukiwanaFraza.toUpperCase().replace('Ł','L');
-		wyszukiwanaFraza = wyszukiwanaFraza.toUpperCase().replace('Ą','A');
+		wyszukiwanaFraza = wyszukiwanaFraza.toUpperCase().replace('Ą','A');  // Zamieniam Polskie znaki poniewaz dane zapisuje bez nich
 		
-		String[] PodzielonaWF = wyszukiwanaFraza.split(Pattern.quote(" "));
+		String[] PodzielonaWF = wyszukiwanaFraza.split(Pattern.quote(" "));  // Dziele slowo podane przy wyszukiwaniu na termy
 		
 		int x = 0;
 		int y = 0;
-		int[][] tablicaTFM = new int[PodzielonaWF.length][ListaWystapienProduktow.size()];
+		int[][] tablicaTFM = new int[PodzielonaWF.length][ListaWystapienProduktow.size()]; // Tworzy array na podstawie ilosci termow i produktow
 		
 		for (int x1 = 0; x1 < tablicaTFM.length; x1++) {
-		    for (int y1 = 0; y1 < tablicaTFM[x1].length; y1++) {
+		    for (int y1 = 0; y1 < tablicaTFM[x1].length; y1++) { 						// Inicjuje Array
 		    	tablicaTFM[x1][y1] = 0;
 		    }}
-	
-		
-		
+			
 		String[] NaglowkiTFM = new String[ListaWystapienProduktow.size()];
 		String[] ListaTagow;
 		int[] ListaWystapien;
@@ -263,40 +253,40 @@ public class Projekt {
 				
 				for (String slowo : PodzielonaWF) {				
 					int index = 0;
-					for (String nazwa : ListaTagow)
+					for (String nazwa : ListaTagow) //dla kazdego elementu z listy obiektow produktu
 					{
 						
 						if (slowo.equals(nazwa))
 						{
-							tablicaTFM[x][y] = ListaWystapien[index];									
+							tablicaTFM[x][y] = ListaWystapien[index];	//dodaje dane do macierzy TFM		 						
 						}
 						index ++;
 					}
 					x++;
 				}	
-				NaglowkiTFM[y] = produkt.getNazwa();
+				NaglowkiTFM[y] = produkt.getNazwa(); // zapisuje naglowek osobno
 				y++;
 			}
 			
 		int[][] TablicaEuq = new int[PodzielonaWF.length][ListaWystapienProduktow.size()];
 		int[] OdleglosciEuq = new int[ListaWystapienProduktow.size()];
 		
-		for (Produkt produkt : ListaWystapienProduktow)
+		for (Produkt produkt : ListaWystapienProduktow) // dla kazdego produktu z listy obiektow
 		{
-			wychodzexD:
-			for (String tag: produkt.getListaTagow())
+			wychodzexD:	// tag dla break'a
+			for (String tag: produkt.getListaTagow())  // dla kazdego tagu z listy tagow
 			{
-				for(String Fraza : PodzielonaWF)
+				for(String Fraza : PodzielonaWF) // oraz dla kazdego slowa podanego podczas wyszukiwania
 				{
-					if (tag.equals(Fraza)) {
-						JButton przycisk = new JButton(String.valueOf(produkt.getNazwa()));
-						przycisk.addActionListener(new ActionListener() {
-							
+					if (tag.equals(Fraza)) {   // jezeli tag jest rowny frazie
+						JButton przycisk = new JButton(String.valueOf(produkt.getNazwa())); // tworzy przycisk
+						przycisk.addActionListener(new ActionListener() {					// oraz dodaje ActionListenera
+							//
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								nazwaPrzedmiotuJakoNaglowek.setText(produkt.getNazwa());
 								
-								Writer output;
+								Writer output;			// Dodaje wpis do piku wyszukaneDane.txt
 								try {
 									String tagowanie = "";
 									for (String slowo : PodzielonaWF)
@@ -311,10 +301,10 @@ public class Projekt {
 								} catch (IOException e1) {}  
 								
 								
-								int indexSzukanegoTaga = Arrays.asList(NaglowkiTFM).indexOf(produkt.getNazwa());
+								int indexSzukanegoTaga = Arrays.asList(NaglowkiTFM).indexOf(produkt.getNazwa()); // zwraca indeks produktu
 								
-								for (int x = 0; x < tablicaTFM.length; x++) {
-								    for (int y = 0; y < tablicaTFM[x].length; y++) {
+								for (int x = 0; x < tablicaTFM.length; x++) {				// tworzy macierz przygotowojaca dane dla odleglosci Euqlidesowych
+								    for (int y = 0; y < tablicaTFM[x].length; y++) {		// ten array jest wyswietlany razem z wynikiem(reklamami)
 								    	TablicaEuq[x][y] = (int) Math.pow(tablicaTFM[x][indexSzukanegoTaga] - tablicaTFM[x][y], 2);								    
 								    }
 								}
@@ -323,18 +313,15 @@ public class Projekt {
 								int index = 0;
 								
 								
-								for (int x = 0; x < tablicaTFM.length; x++) {
+								for (int x = 0; x < tablicaTFM.length; x++) {			// sumuje odległości
 								    for (int y = 0; y < tablicaTFM[x].length; y++) {
-								    	//TODO Sqrt
-								    	OdleglosciEuq[y] = OdleglosciEuq[y] + TablicaEuq[x][y];
-								    	
-								    	
+								    	OdleglosciEuq[y] = OdleglosciEuq[y] + TablicaEuq[x][y];								    	
 								    }
 								}
 								
 								double max = 0;
 								
-								for (double wartoscEuq : WlasciweWartosciEuq) {
+								for (double wartoscEuq : WlasciweWartosciEuq) {			// pierwiastkuje zsumowane odleglosci tworzac miary odleglosci Euqlidesa
 									
 									wartoscEuq = Math.sqrt(new Double(OdleglosciEuq[index]));
 									if (max<wartoscEuq) max = wartoscEuq;
@@ -396,19 +383,19 @@ public class Projekt {
 									
 								}
 
-								GridPanel2.removeAll();
+								GridPanel2.removeAll();			//Resetuje panel przed dodaniem do niego nowych elementow
 								GridPanel2.revalidate();
 								GridPanel2.repaint();
 								
 								boolean reklamowac = false;
 								
-								for (int i : indexyReklam)
-								{
+								for (int i : indexyReklam)		// Kazdy element array'a indexyReklam jest sprawdzany
+								{								// Jezeli 1szy element jest rowny -1 nie zostana podane zadne reklamy
 									if (i != -1)
 									{
 									JLabel ReklamowanyProdukt = new JLabel(NaglowkiTFM[i]);
 									GridPanel2.add(ReklamowanyProdukt);
-									reklamowac = true;
+									reklamowac = true;		    // Jezeli istnieje co najmniej 1 reklama dodaje Label z "Polecamy rowniez"
 									}
 								}
 								
@@ -417,8 +404,8 @@ public class Projekt {
 								else
 									PolecaneLabel.setVisible(false);
 								
-								JFrame rezultat = new JFrame("Euqlides");
-								
+								JFrame rezultat = new JFrame("Euqlides");  //Dodatkowo dodalem nowe okienko z wczesniej wspomnianym arrayem
+																		   //jako tabelka przedstawiajaca wartosci odleglosci
 								String[][] MEuqKonw = new String[PodzielonaWF.length][ListaWystapienProduktow.size()];
 								
 								for (int x = 0; x < MEuqKonw.length; x++) {
@@ -438,9 +425,9 @@ public class Projekt {
 								przelacznik.show(_1stLayer, "Po_wybraniu_kwiata");				
 							}
 						});
-						PanelGridow.add(przycisk);
-						break wychodzexD;					
-					}
+						PanelGridow.add(przycisk);											// dodaje przycisk do panelu gridow
+						break wychodzexD;				// aby uniknac duplikatow wylamuje sie z 2 petli na raz ( do tagu )
+					}	
 				}
 			}
 		}		

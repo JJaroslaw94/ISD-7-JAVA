@@ -529,48 +529,44 @@ public class Main {
 
 	public static void przeszukiwaniePliku()
 	{
-		PoleNaWynikSzukaniaTermow.setText(null);
-		TermyN = PoleNaTermy.getText();
-		String[] Termy = TermyN.split(Pattern.quote(","));
-		IleRoznychTermow = Termy.length;
-		int IleTermow[]= new int[IleRoznychTermow];
+		PoleNaWynikSzukaniaTermow.setText(null); 			// Resetuje textField dla wyniku
+		TermyN = PoleNaTermy.getText();						// Przekazuje słowo z textFieldu na termy
+		String[] Termy = TermyN.split(Pattern.quote(","));  // Dziele pozyskane słowo na termy oddzielajac je przecinkiem
+		IleRoznychTermow = Termy.length;				    // Zapisuje ilosc termow
+		int IleTermow[]= new int[IleRoznychTermow];			// Tworze Array na podsawie ilosci termow
 		int i = 0;
 		IlewystN = "";
 		
-		StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(chosenFile)))
-        {
- 
-            String sCurrentLine;
-            while ((sCurrentLine = br.readLine()) != null)
-            {
-                contentBuilder.append(sCurrentLine).append("\n");
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+		StringBuilder contentBuilder = new StringBuilder();							// Wczytanie Pliku 
+        try (BufferedReader br = new BufferedReader(new FileReader(chosenFile)))	//
+        {																			//
+            String sCurrentLine;													//
+            while ((sCurrentLine = br.readLine()) != null)							//
+            {																		//
+                contentBuilder.append(sCurrentLine).append("\n");					//
+            }																		//
+        }																			//
+        catch (IOException e){ }													//
 				
-        String TextN = contentBuilder.toString();
-        String[] Text = TextN.split(Pattern.quote(" "));
+        String TextN = contentBuilder.toString();					// Przekazanie tekstu do zmiennej
+        String[] Text = TextN.split(Pattern.quote(" "));			// utworzenie array'a skladajacego sie ze slow oddzielonych spacja (" ")
         
-        for(String slowo : Text)
+        for(String slowo : Text)								// For wykona się dla kazdego slowa z Array'u Text
 		{
-        	for(String term : Termy)
+        	for(String term : Termy)							// Kazde słowo zostaje porownane ze wszystkimi termami
         	{
         		if (precyzja.getState()) {
-        			if (slowo.equals(term)) IleTermow[i] ++;
+        			if (slowo.equals(term)) IleTermow[i] ++;			    // Poruwnywanie termu do słowa
             		i++;
         		}else
         		{
-        			if (slowo.contains(term)) IleTermow[i] ++;
+        			if (slowo.contains(term)) IleTermow[i] ++;				// Nie uzywane
             		i++;
         		}    		
         	}
         	i = 0;
 		}
-		for (i = 0; i < Termy.length; i++) {
+		for (i = 0; i < Termy.length; i++) { 			// Fragment wypisujacy wynik do textFielda z wynikiem
 		PoleNaWynikSzukaniaTermow.setText(PoleNaWynikSzukaniaTermow.getText()  + Termy[i] + ": " + IleTermow[i]+ "\n");		
 			IlewystN=IlewystN+IleTermow[i];
 			if(i < Termy.length-1) IlewystN=IlewystN+",";
@@ -646,21 +642,20 @@ public class Main {
 	
 	public static void obliczanieEuq() {
 		
-		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText()); //Zczytanie wartości która reprezentuje index dokumentu porownywanego z innymi
 		int sumaTermow = 0;
-		
-		
-		for (int i = 0; i < LdwTSM; i++)
-			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)
+			
+		for (int i = 0; i < LdwTSM; i++)						   //For dla wierszy
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++) //For dla kolumn
 			{
-				if (ii == 0 || i == 0) {
+				if (ii == 0 || i == 0) {									//Wiersz 0 kolumna 0 ma pozostać pusta
 				if (ii == 0) {
-					TEuq.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+					TEuq.setValueAt("D" + indexDok + " - D" + i, i, ii);	//1 kolumna zawiera nazwy porownywanych dokumentow tj. D1 - D9
 				}
-				if (i == 0) {
+				if (i == 0) {												//Pierwszy wiersz zawiera naglowki
 					if ( ii < (int)IleRoznychTermow+1)
-					TEuq.setValueAt(TTSM.getValueAt(i, ii), i, ii);
-					else
+					TEuq.setValueAt(TTSM.getValueAt(i, ii), i, ii);			//Naglowki termow
+					else													//reszta naglowkow jest specjalna
 					if (ii == (int)IleRoznychTermow+1)
 					TEuq.setValueAt("Suma", i, ii);
 					else
@@ -669,58 +664,55 @@ public class Main {
 				}
 				}else 
 				{
-					if ( ii < (int)IleRoznychTermow+1)
-						{
+					if ( ii < (int)IleRoznychTermow+1)  //Wypelnianie wartosciami liczbowymi
+						{								//Implementacja czesci wzoru tj. różnica miedzy dokumentami podniesiona do kwadratu
 						Double wynik = Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), 2);
 						TEuq.setValueAt(Double.toString(wynik),i,ii);
 						sumaTermow += wynik;
 						}
 						else
-						if (ii == (int)IleRoznychTermow+1)
+						if (ii == (int)IleRoznychTermow+1) // Suma wszystkich wynikow wiersza
 						TEuq.setValueAt(Integer.toString(sumaTermow), i, ii);
 						else
 						if (ii == (int)IleRoznychTermow+2)
-						{
+						{								   // Pierwiastek sumy
 						TEuq.setValueAt(Double.toString(Math.sqrt(sumaTermow)), i, ii);
 						sumaTermow = 0;
-						}
-						
+						}		
 				}
-			}
-		
-		
+			}	
 	}
 	
 	public static void obliczanieManhatan()
 	{
-		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());	//Zczytanie wartości która reprezentuje index dokumentu porownywanego z innymi
 		int sumaTermow = 0;
 		
 		
-		for (int i = 0; i < LdwTSM; i++)
-			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)
+		for (int i = 0; i < LdwTSM; i++)							//For dla wierszy
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)	//For dla kolumn
 			{
-				if (ii == 0 || i == 0) {
+				if (ii == 0 || i == 0) {							//Wiersz 0 kolumna 0 ma pozostać pusta
 				if (ii == 0) {
-				TManhatan.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+				TManhatan.setValueAt("D" + indexDok + " - D" + i, i, ii);	//1 kolumna zawiera nazwy porownywanych dokumentow tj. D1 - D9
 				}
-				if (i == 0) {
-					if ( ii < (int)IleRoznychTermow+1)
-					TManhatan.setValueAt(TTSM.getValueAt(i, ii), i, ii);
-					else
+				if (i == 0) {	
+					if ( ii < (int)IleRoznychTermow+1)						//Pierwszy wiersz zawiera naglowki
+					TManhatan.setValueAt(TTSM.getValueAt(i, ii), i, ii);	//Naglowki termow
+					else													//reszta naglowkow jest specjalna
 					if (ii == (int)IleRoznychTermow+1)
 					TManhatan.setValueAt("Manhatan", i, ii);
 				}
 				}else 
 				{
-					if ( ii < (int)IleRoznychTermow+1)
-						{
+					if ( ii < (int)IleRoznychTermow+1)	//Wypelnianie wartosciami liczbowymi
+					{									//Implementacja czesci wzoru tj. różnica miedzy dokumentami podniesiona do kwadratu
 						Double wynik = Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), 2);
 						TManhatan.setValueAt(Double.toString(wynik),i,ii);
 						sumaTermow += wynik;
 						}
 						else
-						if (ii == (int)IleRoznychTermow+1)
+						if (ii == (int)IleRoznychTermow+1)	// Suma wszystkich wynikow wiersza (odleglosc Manhattana)
 						{
 						TManhatan.setValueAt(Integer.toString(sumaTermow), i, ii);
 						sumaTermow = 0;
@@ -731,37 +723,35 @@ public class Main {
 	
 	public static void obliczanieMax()
 	{
-		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());	//Zczytanie wartości która reprezentuje index dokumentu porownywanego z innymi
 		int sumaTermow = 0;
 		
 		
-		for (int i = 0; i < LdwTSM; i++)
-			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)
+		for (int i = 0; i < LdwTSM; i++)							//For dla wierszy
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+2 ; ii++)	//For dla kolumn
 			{
-				if (ii == 0 || i == 0) {
+				if (ii == 0 || i == 0) {							//Wiersz 0 kolumna 0 ma pozostać pusta
 				if (ii == 0) {
-				TMax.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+				TMax.setValueAt("D" + indexDok + " - D" + i, i, ii);	//1 kolumna zawiera nazwy porownywanych dokumentow tj. D1 - D9
 				}
 				if (i == 0) {
-					if ( ii < (int)IleRoznychTermow+1)
-					TMax.setValueAt(TTSM.getValueAt(i, ii), i, ii);
-					else
-					if (ii == (int)IleRoznychTermow+1)
+					if ( ii < (int)IleRoznychTermow+1)					//Pierwszy wiersz zawiera naglowki
+					TMax.setValueAt(TTSM.getValueAt(i, ii), i, ii);		//Naglowki termow
+					else												//reszta naglowkow jest specjalna
+					if (ii == (int)IleRoznychTermow+1)				
 					TMax.setValueAt("Max", i, ii);
 				}
 				}else 
 				{
-					if ( ii < (int)IleRoznychTermow+1)
-						{
+					if ( ii < (int)IleRoznychTermow+1)			//Wypelnianie wartosciami liczbowymi
+						{										//Implementacja czesci wzoru tj. różnica miedzy dokumentami podniesiona do kwadratu
 						Double wynik = Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), 2);
 						TMax.setValueAt(Double.toString(wynik),i,ii);
-						if (sumaTermow<wynik) sumaTermow = (int) Math.round(wynik);
-						
-						
+						if (sumaTermow<wynik) sumaTermow = (int) Math.round(wynik);		// Sprawdzanie czy poprzednia liczba w wierszu jest mniejsza od aktualnek				
 						}
 						else
 						if (ii == (int)IleRoznychTermow+1)
-						{
+						{									// Wypisanie odleglosci Czebyszewa
 						TMax.setValueAt(Integer.toString(sumaTermow), i, ii);
 						sumaTermow = 0;
 						}												
@@ -772,24 +762,22 @@ public class Main {
 	
 public static void obliczanieMini() {
 		
-		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());		//Zczytanie wartości która reprezentuje index dokumentu porownywanego z innymi
 		int sumaTermow = 0;
 		
-		int mod = Integer.parseInt(MinkTargetMTextF.getText());
-		
-		
-		
-		for (int i = 0; i < LdwTSM; i++)
-			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)
+		int mod = Integer.parseInt(MinkTargetMTextF.getText());			//Zczytanie wartości która reprezentuje mnoznik uzywany przy zmienianiu wagi		
+				
+		for (int i = 0; i < LdwTSM; i++)								//For dla wierszy
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+3 ; ii++)		//For dla kolumn
 			{
-				if (ii == 0 || i == 0) {
+				if (ii == 0 || i == 0) {								//Wiersz 0 kolumna 0 ma pozostać pusta
 				if (ii == 0) {
-					TMink.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+					TMink.setValueAt("D" + indexDok + " - D" + i, i, ii);	//1 kolumna zawiera nazwy porownywanych dokumentow tj. D1 - D9
 				}
-				if (i == 0) {
+				if (i == 0) {												//Pierwszy wiersz zawiera naglowki
 					if ( ii < (int)IleRoznychTermow+1)
-						TMink.setValueAt(TTSM.getValueAt(i, ii), i, ii);
-					else
+						TMink.setValueAt(TTSM.getValueAt(i, ii), i, ii);	//Naglowki termow
+					else													//reszta naglowkow jest specjalna
 					if (ii == (int)IleRoznychTermow+1)
 						TMink.setValueAt("Suma", i, ii);
 					else
@@ -798,8 +786,8 @@ public static void obliczanieMini() {
 				}
 				}else 
 				{
-					if ( ii < (int)IleRoznychTermow+1)
-						{
+					if ( ii < (int)IleRoznychTermow+1)			//Wypelnianie wartosciami liczbowymi
+					{											//Implementacja czesci wzoru tj. różnica miedzy dokumentami podniesiona do wczesniej pobranej potegi
 						Double wynik = Math.abs(Math.pow((Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii))), mod));
 						TMink.setValueAt(Double.toString(wynik),i,ii);
 						sumaTermow += wynik;
@@ -809,37 +797,31 @@ public static void obliczanieMini() {
 							TMink.setValueAt(Integer.toString(sumaTermow), i, ii);
 						else
 						if (ii == (int)IleRoznychTermow+2)
-						{
+						{										// Wypisanie odleglosci Minkowskiego
 							TMink.setValueAt(Double.toString(Math.sqrt(sumaTermow)), i, ii);
 						sumaTermow = 0;
 						}
-						
 				}
-			}
-		
-		
+			}	
 	}
 
 	public static void obliczanieZestawieniei()
 	{
-		int indexDok = Integer.parseInt(EuqTargetTextF.getText());
-		int sumaTermow = 0;
+		int indexDok = Integer.parseInt(EuqTargetTextF.getText());	//Zczytanie wartości która reprezentuje index dokumentu porownywanego z innymi
+		int sumaTermow = 0;		
+		int mod = Integer.parseInt(MinkTargetMTextF.getText());		//Zczytanie wartości która reprezentuje mnoznik uzywany przy zmienianiu wagi		
 		
-		int mod = Integer.parseInt(MinkTargetMTextF.getText());
-		
-		
-		
-		for (int i = 0; i < LdwTSM; i++)
-			for (int ii = 0 ; ii < (int)IleRoznychTermow+5 ; ii++)
+		for (int i = 0; i < LdwTSM; i++)							//For dla wierszy
+			for (int ii = 0 ; ii < (int)IleRoznychTermow+5 ; ii++)	//For dla kolumn
 			{
-				if (ii == 0 || i == 0) {
+				if (ii == 0 || i == 0) {							//Wiersz 0 kolumna 0 ma pozostać pusta
 				if (ii == 0) {
-					TZestawienie.setValueAt("D" + indexDok + " - D" + i, i, ii);	
+					TZestawienie.setValueAt("D" + indexDok + " - D" + i, i, ii);		//1 kolumna zawiera nazwy porownywanych dokumentow tj. D1 - D9
 				}
 				if (i == 0) {
-					if ( ii < (int)IleRoznychTermow+1)
-						TZestawienie.setValueAt(TTSM.getValueAt(i, ii), i, ii);
-					else
+					if ( ii < (int)IleRoznychTermow+1)									//Pierwszy wiersz zawiera naglowki
+						TZestawienie.setValueAt(TTSM.getValueAt(i, ii), i, ii);			//Naglowki termow
+					else																//reszta naglowkow jest specjalna
 					if (ii == (int)IleRoznychTermow+1)
 						TZestawienie.setValueAt("Euqlides", i, ii);
 					else
@@ -854,34 +836,33 @@ public static void obliczanieMini() {
 				}
 				}else 
 				{
-					if ( ii < (int)IleRoznychTermow+1)
-						{
+					if ( ii < (int)IleRoznychTermow+1)	//Wypelnianie wartosciami liczbowymi
+						{								//Implementacja czesci wzoru tj. różnica miedzy dokumentami podniesiona do wczesniej pobranej potegi
 						Double wynik = Math.abs(Double.parseDouble((String) TTSM.getValueAt(indexDok,ii))-Double.parseDouble((String) TTSM.getValueAt(i,ii)));
 						TZestawienie.setValueAt(Double.toString(wynik),i,ii);						
 						}
 						else
-						if (ii == (int)IleRoznychTermow+1)
+						if (ii == (int)IleRoznychTermow+1)  // Miara odleglosci Euqlidesa
 							TZestawienie.setValueAt(TEuq.getValueAt(i, ii+1), i, ii);
 						else
-						if (ii == (int)IleRoznychTermow+2)
+						if (ii == (int)IleRoznychTermow+2)	// Suma wszystkich wynikow wiersza (odleglosc Manhattana)
 						{
 							TZestawienie.setValueAt(TManhatan.getValueAt(i, ii-1), i, ii);				
 						}
 						else
-						if (ii == (int)IleRoznychTermow+3)
+						if (ii == (int)IleRoznychTermow+3)	// Wypisanie odleglosci Czebyszewa
 						{
 							TZestawienie.setValueAt(TMax.getValueAt(i, ii-2), i, ii);
 						}
 						else
-						if (ii == (int)IleRoznychTermow+4)
+						if (ii == (int)IleRoznychTermow+4)	// Wypisanie odleglosci Minkowskiego
 						{
 							TZestawienie.setValueAt(TMink.getValueAt(i, ii-2), i, ii);
 							sumaTermow = 0;
-						}
-						
-				}
-			}
-	}
+}		}		}		}						
+
+			
+	
 	
 	public static void main(String[] args) 
 	{		

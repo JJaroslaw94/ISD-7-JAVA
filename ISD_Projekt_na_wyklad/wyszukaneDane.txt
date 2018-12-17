@@ -88,3 +88,11 @@ CZERWONY.Bukiet rubinowy
 CZERWONY.Bukiet rubinowy
 CZERWONY,ROZ,KWIAT,NIEBIESKI.Róża Biała
 KWIAT,BUKIET.Bukiet rubinowy
+CZERWONY,KWIAT.Róża Żółta
+KWIAT.Lilia
+KWIAT.Lilia
+KWIAT.Lilia
+KWIAT.Lilia
+KWIAT.Lilia
+KWIAT.Mak
+KWIAT,BUKIET.Mak
